@@ -1,0 +1,12 @@
+--- a/drivers/media/platform/msm/camera_v2/sensor/actuator/msm_actuator.c
++++ b/drivers/media/platform/msm/camera_v2/sensor/actuator/msm_actuator.c
+@@ -1072,6 +1072,9 @@
+ 	}
+ 	CDBG("Exit\n");
+ 
++	/* mitigate mm-qcamera-daemon PDAF race on direction change */
++	usleep_range(4000, 6000);
++
+ 	return rc;
+ }
+ #endif
