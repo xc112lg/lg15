@@ -51,7 +51,8 @@ declare -A ROM_DEVICES=(
     [evolution]="h872 h870 us997 h873 h870d"
     [derpfest]="h872 h870 us997 h873 h870d"
     [axion]="h872 h870 us997 h873 h870d"
-    [crdroid]="h872 h870 us997 h873 h870d"
+    #[crdroid]="h872 h870 us997 h873 h870d"
+    [crdroid]="h872"
 )
 
 usage() {
@@ -220,6 +221,8 @@ run_crdroid() {
         source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/crdframework.sh)
         source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/sepolicycrdfix.sh)
     . build/envsetup.sh
+    sed -i 's|"maintainer": "\${MAINTAINER:-}"|"maintainer": "xc112lg"|' vendor/lineage/build/tools/createjson.sh
+        sed -i 's|https://raw\.githubusercontent\.com/crdroidandroid|https://raw.githubusercontent.com/xc112lg|g' packages/apps/Settings/src/com/android/settings/deviceinfo/firmwareversion/BuildMaintainerPreference.kt
 
     local devices=(${ROM_DEVICES[crdroid]})
     if [ "$DEVICE" != "all" ]; then
