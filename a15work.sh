@@ -147,7 +147,7 @@ run_evolution() {
         git clone https://github.com/xc112lg/local_manifests --depth 1 -b lg .repo/local_manifests
         curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/resync.sh | bash
     common_env_exports
-        sed -i '$a -include vendor/evolution-priv/keys/keys.mk' device/lge/msm8996-common/msm8996.mk
+        #sed -i '$a -include vendor/evolution-priv/keys/keys.mk' device/lge/msm8996-common/msm8996.mk
         source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/fixes.sh)
 
     . build/envsetup.sh
