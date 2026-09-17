@@ -149,7 +149,7 @@ run_evolution() {
     common_env_exports
         #sed -i '$a -include vendor/evolution-priv/keys/keys.mk' device/lge/msm8996-common/msm8996.mk
         source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/fixes.sh)
-
+ grep -q "OPTION_CHECK_BRACKETS" frameworks/base/core/java/android/database/sqlite/SQLiteTokenizer.java 2>/dev/null && echo "already patched, skipping" || curl -L https://github.com/Evolution-X/frameworks_base/commit/5fc391bd5ab762123490a83c405d0ed0e23b7802.patch | git -C frameworks/base am
     . build/envsetup.sh
 
     local devices=(${ROM_DEVICES[evolution]})
