@@ -398,7 +398,7 @@ release_and_notify() {
     local issues="$5"
     local fixes="$6"
     local notes="$7"
-    local github_repo_default="${RELEASE_REPO:-lg_releases}"
+    local github_repo_default="${RELEASE_REPO:-lg15}"
 
     local telegram_message
     read -r -d '' telegram_message << TEMPLATE || true
