@@ -162,7 +162,7 @@ run_evolution() {
         #echo "▶ crdroid: lunch lineage_${dev}-bp1a-user"
         lunch "lineage_${dev}-bp1a-userdebug"
         make installclean
-        m recovery
+        m evolution
     done
 
     run_upload_evolution
