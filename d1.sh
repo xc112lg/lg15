@@ -51,12 +51,12 @@ RELEASE_REPO="${RELEASE_REPO:-lg_releases}"
 declare -A ROM_DEVICES=(
     [lunaris]="h872 h870 us997 h873 h870d"
     [lineage]="h872 h870 us997 h873 h870d"
-    [evolution]="h872 h870 us997 h873 h870d"
+   # [evolution]="h872 h870 us997 h873 h870d"
     [derpfest]="h872 h870 us997 h873 h870d"
     [axion]="h872 h870 us997 h873 h870d"
-    [crdroid]="h872 h870 us997 h873 h870d"
-    #[crdroid]="h872 h870d"
-    #[evolution]="h870"
+    #[crdroid]="h872 h870 us997 h873 h870d"
+    [crdroid]="h872"
+    [evolution]="h872"
 )
 
 usage() {
@@ -145,8 +145,7 @@ run_evolution() {
     common_prep
         repo init -u https://github.com/Evolution-X/manifest -b vic --git-lfs --depth=1
         git clone https://github.com/xc112lg/local_manifests --depth 1 -b lg .repo/local_manifests
-        repo sync -c -j64 --force-sync --no-clone-bundle --no-tags
-        /opt/crave/resync.sh
+        curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/resync.sh | bash
     common_env_exports
         sed -i '$a -include vendor/evolution-priv/keys/keys.mk' device/lge/msm8996-common/msm8996.mk
         source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/fixes.sh)
@@ -161,7 +160,7 @@ run_evolution() {
     #echo "▶ crdroid: building device(s): ${devices[*]}"
     for dev in "${devices[@]}"; do
         #echo "▶ crdroid: lunch lineage_${dev}-bp1a-user"
-        lunch "lineage_${dev}-bp1a-user"
+        lunch "lineage_${dev}-bp1a-userdebug"
         make installclean
         m recovery
     done
@@ -178,13 +177,15 @@ run_crdroid() {
     common_prep
         repo init -u https://github.com/crdroidandroid/android.git -b 15.0 --git-lfs --depth=1
         git clone https://github.com/xc112lg/local_manifests --depth 1 -b lgcrd1 .repo/local_manifests
-        repo sync -c -j64 --force-sync --no-clone-bundle --no-tags
-        /opt/crave/resync.sh
+        curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/resync.sh | bash
     common_env_exports
          sed -i '$a -include vendor/lineage-priv/keys/keys.mk' device/lge/msm8996-common/msm8996.mk
          source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/fixes.sh)
          source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/crdframework.sh)
          #source <(curl -sf https://raw.githubusercontent.com/xc112lg/lg_releases/refs/heads/main/sepolicycrdfix.sh)
+                 sed -i 's|"maintainer": "\${MAINTAINER:-}"|"maintainer": "xc112lg"|' vendor/lineage/build/tools/createjson.sh
+        sed -i 's|https://raw\.githubusercontent\.com/crdroidandroid|https://raw.githubusercontent.com/xc112lg|g' packages/apps/Settings/src/com/android/settings/deviceinfo/firmwareversion/BuildMaintainerPreference.kt
+
 
 
     
@@ -200,7 +201,7 @@ run_crdroid() {
    # echo "▶ crdroid: building device(s): ${devices[*]}"
     for dev in "${devices[@]}"; do
         #echo "▶ crdroid: lunch lineage_${dev}-bp1a-userdebug"
-        lunch "lineage_${dev}-bp1a-user"
+        lunch "lineage_${dev}-bp1a-userdebug"
         make installclean
         m bacon
     done
