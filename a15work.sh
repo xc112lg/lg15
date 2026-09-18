@@ -386,10 +386,10 @@ TEMPLATE
 
             CHANGELOG_URL=$(echo "$TELEGRAPH_RESPONSE" | jq -r '.result.url // empty')
             if [ -n "$CHANGELOG_URL" ]; then
-                echo "✓ Changelog uploaded: $CHANGELOG_URL"
+                #echo "✓ Changelog uploaded: $CHANGELOG_URL"
             else
                 CHANGELOG_URL="https://t.me/ProjectInfinityX/1882"
-                echo "⚠ Failed to create Telegraph page"
+                #echo "⚠ Failed to create Telegraph page"
             fi
         fi
     fi
@@ -501,7 +501,7 @@ DOWNLOADS_SECTION+="
 
     echo "✓ XDA BBCode saved to ${BBCODE_FILE}"
     echo "-------------------- XDA BBCode --------------------"
-    cat "$BBCODE_FILE"
+    #cat "$BBCODE_FILE"
     echo "------------------------------------------------------"
 
     # Send the same BBCode as its own separate Telegram message (plain text —
