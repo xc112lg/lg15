@@ -25,7 +25,7 @@
 #      tree with crDroid's cr_config.xml feature-flag overlays layered on top.
 #   2. Stage the resulting zip/img/tar into the blossom_releases repo
 #   3. Create/replace the GitHub release + tag and upload the artifacts
-#   4. Send the Telegram announcement (Telegraph changelog + image fallback)
+#   4. Send the Telegram announcement (image + text fallback)
 #
 # All five ROMs release into ONE shared GitHub repo: blossom_releases
 # (must already exist on GitHub under xc112lg). Each ROM keeps its own
@@ -368,32 +368,6 @@ TEMPLATE
         fi
     done
 
-    local CHANGELOG_URL="https://t.me/ProjectInfinityX/1882"
-
-    if [ -n "${TELEGRAPH_TOKEN:-}" ]; then
-        local CHANGELOG_CONTENT
-        CHANGELOG_CONTENT=$(curl -fsSL \
-            "https://raw.githubusercontent.com/Evolution-X/changelog/refs/heads/bka/changelogs/LATEST.txt" 2>/dev/null)
-
-        if [ -n "$CHANGELOG_CONTENT" ]; then
-            local TELEGRAPH_RESPONSE
-            TELEGRAPH_RESPONSE=$(curl -s \
-                -X POST "https://api.telegra.ph/createPage" \
-                -d "access_token=$TELEGRAPH_TOKEN" \
-                --data-urlencode "title=Changelog $(date '+%Y-%m-%d')" \
-                --data-urlencode "author_name=xc112lg" \
-                --data-urlencode "content=[{\"tag\":\"pre\",\"children\":[$(jq -Rs . <<< "$CHANGELOG_CONTENT")]}]")
-
-            CHANGELOG_URL=$(echo "$TELEGRAPH_RESPONSE" | jq -r '.result.url // empty')
-            if [ -n "$CHANGELOG_URL" ]; then
-                #echo "✓ Changelog uploaded: $CHANGELOG_URL"
-            else
-                CHANGELOG_URL="https://t.me/ProjectInfinityX/1882"
-                #echo "⚠ Failed to create Telegraph page"
-            fi
-        fi
-    fi
-
     local DOWNLOADS_SECTION="
 <b>📥 Downloads:</b>"
 
@@ -533,8 +507,7 @@ JSONEOF
         echo "⚠ Telegram credentials not set. Skipping BBCode Telegram send."
     fi
 
-    # Substitute placeholders now that CHANGELOG_URL/DOWNLOADS_SECTION are known
-    telegram_message="${telegram_message//\{\{CHANGELOG_URL\}\}/$CHANGELOG_URL}"
+    # Substitute placeholders now that DOWNLOADS_SECTION is known
     telegram_message="${telegram_message//\{\{DOWNLOADS_SECTION\}\}/$DOWNLOADS_SECTION}"
     telegram_message="${telegram_message//\{\{BUILD_DATE\}\}/$(date '+%d/%m/%y')}"
 
